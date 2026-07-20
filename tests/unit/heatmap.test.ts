@@ -38,6 +38,13 @@ describe("computeHeatmap (data-model.md heatmap projection, FR-009)", () => {
     expect(day).toEqual({ date: yesterday, state: "incomplete" });
   });
 
+  it("does not mark today as incomplete while its check-in is still genuinely in progress", () => {
+    // Commitment set, night check-in not due yet — must not render as a failure
+    // before the day is actually over (found via live manual testing).
+    const result = computeHeatmap([entry(TODAY, "pending")], TODAY);
+    expect(result[29]).toEqual({ date: TODAY, state: "no-entry" });
+  });
+
   it("produces all three distinct states together", () => {
     const result = computeHeatmap(
       [entry("2026-07-18", "complete"), entry("2026-07-19", "incomplete")],
