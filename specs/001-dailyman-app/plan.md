@@ -40,10 +40,10 @@ Dailyman is a single-page, single-user web app implementing a twice-daily accoun
 | II. Testing Standards | PASS | Vitest + RTL cover reusable/recurring logic (streak calc, heatmap projection, state machine — the recurring flows); quickstart.md is the manual-browser-check floor required for every scenario. |
 | III. UX Consistency | PASS | Single Tailwind theme (dark, one accent color) shared across all 4 views; streak number is the consistent visual anchor per spec Assumptions. |
 | IV. Performance Requirements | PASS (watch) | Vite production build is a static bundle with no unnecessary scripts beyond the chosen dependencies; core content (main screen, history) remains usable under limited/no network — only the two AI calls are network-dependent (research.md §5). Bundle size should be spot-checked during implementation, not re-litigated here. |
-| Technical Constraints — "plain HTML/CSS/JS first, framework only when scope clearly requires it" | **VIOLATION (justified)** | User's plan input mandates React. Justification recorded in Complexity Tracking below — re-affirmed after Phase 1 design since the state machine (data-model.md) confirms the multi-view, async-state complexity that motivated the exception. |
+| Technical Constraints — component framework criteria (amended in constitution v1.2.0) | PASS | React is warranted per the amended Technical Constraints: the feature has multiple interdependent views and non-trivial client-side state (state machine, async data loading, mid-flow resume) per data-model.md. Previously tracked as a justified violation against the pre-amendment constraint; the constitution was updated via `/speckit-constitution` (v1.1.0 → v1.2.0) specifically to codify this criteria after `/speckit-analyze` flagged the mismatch, so this now passes outright rather than requiring a standing exception. |
 | Technical Constraints — "deployable as a static web app, no server-side runtime dependency" | PASS | Vite build output is static assets; the app calls an external third-party API directly from the client rather than running its own server. |
 
-Re-checked post-Phase-1: data-model.md's state machine (7 in-progress steps, 3 terminal states per day, cross-day acknowledgment lookahead) and contracts/ai-generation.md's async error/retry handling confirm the framework exception remains warranted — this is not incidental complexity, it is the feature's actual shape.
+Re-checked post-Phase-1: data-model.md's state machine (7 in-progress steps, 3 terminal states per day, cross-day acknowledgment lookahead) and contracts/ai-generation.md's async error/retry handling confirm the framework choice remains warranted under the amended constitution — this is not incidental complexity, it is the feature's actual shape.
 
 ## Project Structure
 
@@ -92,6 +92,8 @@ dailyman/
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| Framework introduction (React) instead of plain HTML/CSS/JS | The feature is a multi-view state machine (data-model.md: 7 in-progress steps, cross-day acknowledgment lookahead, async IndexedDB + network state) rendered across 4 conditional screens. React's component/state model maps directly onto this; TypeScript enforces the DailyEntry schema across every view. | Plain JS was rejected because hand-rolling view-diffing and state synchronization for 4 interdependent, conditionally-rendered screens (plus mid-flow resume) would reproduce — with more custom code and more bug surface — exactly what a component framework already solves, working against the constitution's own Code Quality First principle rather than serving it. |
+No unresolved violations. The React framework choice was originally tracked here as a justified violation of
+the pre-amendment "plain HTML/CSS/JS first" constraint; constitution v1.2.0 (2026-07-20) codified the
+underlying reasoning — multi-view UIs with non-trivial client-side state warrant a component framework — as
+an explicit criterion in Technical Constraints, so this is now a straightforward PASS in the Constitution
+Check above rather than a standing exception.
