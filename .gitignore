@@ -1,2 +1,21 @@
 .claude/settings.local.json
 .DS_Store
+
+# Node / build
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Test / coverage
+coverage/

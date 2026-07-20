@@ -42,11 +42,11 @@ dailyman/
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Scaffold Vite + React + TypeScript project at repository root: `package.json`, `tsconfig.json`, `vite.config.ts`, `index.html`, `src/main.tsx`
-- [ ] T002 [P] Add and pin core runtime dependencies (`react`, `react-dom`, `idb`, `@anthropic-ai/sdk`) in `package.json`
-- [ ] T003 [P] Configure Tailwind CSS with a dark theme and single accent-color token per spec Assumptions in `tailwind.config.ts`, `postcss.config.js`, `src/index.css`
-- [ ] T004 [P] Configure Vitest + React Testing Library test runner in `vitest.config.ts`, `src/test/setup.ts`, and add a `test` script to `package.json`
-- [ ] T005 [P] Configure ESLint + Prettier for TypeScript/React in `.eslintrc.cjs`, `.prettierrc`
+- [X] T001 Scaffold Vite + React + TypeScript project at repository root: `package.json`, `tsconfig.json`, `vite.config.ts`, `index.html`, `src/main.tsx`
+- [X] T002 [P] Add and pin core runtime dependencies (`react`, `react-dom`, `idb`, `@anthropic-ai/sdk`) in `package.json`
+- [X] T003 [P] Configure Tailwind CSS with a dark theme and single accent-color token per spec Assumptions in `tailwind.config.ts`, `postcss.config.js`, `src/index.css`
+- [X] T004 [P] Configure Vitest + React Testing Library test runner in `vitest.config.ts`, `src/test/setup.ts`, and add a `test` script to `package.json`
+- [X] T005 [P] Configure ESLint + Prettier for TypeScript/React in `.eslintrc.cjs`, `.prettierrc`
 
 ---
 
@@ -56,14 +56,15 @@ dailyman/
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Define shared TypeScript types for `DailyEntry`, `InProgressFlowState`, `Streak`, and heatmap day state per data-model.md in `src/lib/types.ts`
-- [ ] T007 [P] Implement local date utilities (today's ISO date, day arithmetic, last-30-days range) per data-model.md and spec Assumptions in `src/lib/date.ts`
-- [ ] T008 Implement IndexedDB wrapper using `idb` defining the `DailyEntry` object store (keyed by date) and a `meta` store (API key, `InProgressFlowState`) per data-model.md in `src/storage/db.ts` (depends on T006)
-- [ ] T009 [P] Implement `DailyEntry` CRUD functions (get by date, upsert, list-by-date-range) in `src/storage/dailyEntryStore.ts` (depends on T008)
-- [ ] T010 [P] Implement `meta` store accessors for the API key and `InProgressFlowState` in `src/storage/metaStore.ts` (depends on T008)
-- [ ] T011 Implement the shared Anthropic client wrapper (API-key retrieval, request timeout, error normalization) per contracts/ai-generation.md "Shared behavior" in `src/ai/client.ts` (depends on T010)
-- [ ] T012 Implement an App shell skeleton that loads persisted state on mount and defines the routing structure between screens (concrete screens are wired in by later phases) in `src/App.tsx` (depends on T009, T010)
-- [ ] T013 [P] Unit tests for date utilities (today's date, last-30-days range boundaries) in `tests/unit/date.test.ts` (depends on T007)
+- [X] T006 Define shared TypeScript types for `DailyEntry`, `InProgressFlowState`, `Streak`, and heatmap day state per data-model.md in `src/lib/types.ts`
+- [X] T007 [P] Implement local date utilities (today's ISO date, day arithmetic, last-30-days range) per data-model.md and spec Assumptions in `src/lib/date.ts`
+- [X] T008 Implement IndexedDB wrapper using `idb` defining the `DailyEntry` object store (keyed by date) and a `meta` store (API key, `InProgressFlowState`) per data-model.md in `src/storage/db.ts` (depends on T006)
+- [X] T009 [P] Implement `DailyEntry` CRUD functions (get by date, upsert, list-by-date-range) in `src/storage/dailyEntryStore.ts` (depends on T008)
+- [X] T010 [P] Implement `meta` store accessors for the API key and `InProgressFlowState` in `src/storage/metaStore.ts` (depends on T008)
+- [X] T011 Implement the shared Anthropic client wrapper (API-key retrieval, request timeout, error normalization) per contracts/ai-generation.md "Shared behavior" in `src/ai/client.ts` (depends on T010)
+- [X] T012 Implement an App shell skeleton that loads persisted state on mount and defines the routing structure between screens (concrete screens are wired in by later phases) in `src/App.tsx` (depends on T009, T010)
+- [X] T013 [P] Unit tests for date utilities (today's date, last-30-days range boundaries) in `tests/unit/date.test.ts` (depends on T007)
+- [X] T013b [P] Unit tests for DailyEntry/meta store persistence round-trip (write → simulate reload → read) in `tests/unit/dailyEntryStore.test.ts` — added during implementation to close the coverage gap flagged by `/speckit-analyze` (G1) for FR-011/SC-004
 
 **Checkpoint**: Foundation ready — user story implementation can now begin
 
@@ -77,18 +78,18 @@ dailyman/
 
 ### Tests for User Story 1
 
-- [ ] T014 [P] [US1] Unit test for the check-in state machine transitions (no-entry → morning-in-progress → commitment-set → night-in-progress → complete/incomplete) per data-model.md in `tests/unit/checkinStateMachine.test.ts`
-- [ ] T015 [P] [US1] Component test for the morning check-in flow (avoidance → live follow-up → commitment saved) in `tests/components/MorningCheckin.test.tsx`
-- [ ] T016 [P] [US1] Component test for the night check-in flow (yes → "what did you learn", no → "what blocked you", each persisting the correct `completionStatus`) in `tests/components/NightCheckin.test.tsx`
+- [X] T014 [P] [US1] Unit test for the check-in state machine transitions (no-entry → morning-in-progress → commitment-set → night-in-progress → complete/incomplete) per data-model.md in `tests/unit/checkinStateMachine.test.ts` — also covers the duplicate-check-in guard and FR-014 gating explicitly (closes `/speckit-analyze` findings G2/G3)
+- [X] T015 [P] [US1] Component test for the morning check-in flow (avoidance → live follow-up → commitment saved) in `tests/components/MorningCheckin.test.tsx`
+- [X] T016 [P] [US1] Component test for the night check-in flow (yes → "what did you learn", no → "what blocked you", each persisting the correct `completionStatus`) in `tests/components/NightCheckin.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implement the morning follow-up generation function (Call 1) per contracts/ai-generation.md in `src/ai/generateFollowup.ts` (depends on T011)
-- [ ] T018 [US1] Implement the check-in state machine hook — step transitions, `InProgressFlowState` read/write for mid-flow resume, and the duplicate-check-in guard (Edge Cases) — in `src/state/useCheckinFlow.ts` (depends on T009, T010, T012)
-- [ ] T019 [P] [US1] Build the `MorningCheckin` component (avoidance input → follow-up question → commitment confirmation) in `src/components/MorningCheckin.tsx` (depends on T017, T018)
-- [ ] T020 [P] [US1] Build the `NightCheckin` component (completion yes/no → learned/blocked prompt; unavailable/redirects to morning flow when no commitment exists per FR-014) in `src/components/NightCheckin.tsx` (depends on T018)
-- [ ] T021 [US1] Build a shared inline AI error/retry UI per contracts/ai-generation.md "Error handling" in `src/components/AiErrorState.tsx` (depends on T017)
-- [ ] T022 [US1] Wire `MorningCheckin` and `NightCheckin` into the App shell with a minimal entry screen showing today's check-in status (streak/heatmap added in Phase 4) in `src/App.tsx` (depends on T019, T020, T021)
+- [X] T017 [US1] Implement the morning follow-up generation function (Call 1) per contracts/ai-generation.md in `src/ai/generateFollowup.ts` (depends on T011)
+- [X] T018 [US1] Implement the check-in state machine hook — step transitions, `InProgressFlowState` read/write for mid-flow resume, and the duplicate-check-in guard (Edge Cases) — in `src/state/useCheckinFlow.ts` (depends on T009, T010, T012)
+- [X] T019 [P] [US1] Build the `MorningCheckin` component (avoidance input → follow-up question → commitment confirmation) in `src/components/MorningCheckin.tsx` (depends on T017, T018)
+- [X] T020 [P] [US1] Build the `NightCheckin` component (completion yes/no → learned/blocked prompt; unavailable/redirects to morning flow when no commitment exists per FR-014) in `src/components/NightCheckin.tsx` (depends on T018)
+- [X] T021 [US1] Build a shared inline AI error/retry UI per contracts/ai-generation.md "Error handling" in `src/components/AiErrorState.tsx` (depends on T017)
+- [X] T022 [US1] Wire `MorningCheckin` and `NightCheckin` into the App shell with a minimal entry screen showing today's check-in status (streak/heatmap added in Phase 4) in `src/App.tsx` (depends on T019, T020, T021)
 
 **Checkpoint**: User Story 1 is fully functional and independently testable — a full day's commitment-and-reflection loop works end to end.
 
@@ -102,17 +103,17 @@ dailyman/
 
 ### Tests for User Story 2
 
-- [ ] T023 [P] [US2] Unit test for streak computation — walk-backward from the most recent resolved day, hard reset to 0 on any incomplete or missing day, no grace period — in `tests/unit/streak.test.ts`
-- [ ] T024 [P] [US2] Unit test for the 30-day heatmap projection (complete / incomplete / no-entry states) in `tests/unit/heatmap.test.ts`
+- [X] T023 [P] [US2] Unit test for streak computation — walk-backward from the most recent resolved day, hard reset to 0 on any incomplete or missing day, no grace period — in `tests/unit/streak.test.ts`
+- [X] T024 [P] [US2] Unit test for the 30-day heatmap projection (complete / incomplete / no-entry states) in `tests/unit/heatmap.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T025 [P] [US2] Implement the streak computation function per data-model.md's Streak computation rule in `src/lib/streak.ts` (depends on T009)
-- [ ] T026 [P] [US2] Implement the 30-day heatmap projection function in `src/lib/heatmap.ts` (depends on T009, T007)
-- [ ] T027 [P] [US2] Build the `StreakCounter` component (large numeral, the dominant visual element per spec Assumptions) in `src/components/StreakCounter.tsx` (depends on T025)
-- [ ] T028 [P] [US2] Build the `Heatmap` component with three visually distinct day states in `src/components/Heatmap.tsx` (depends on T026)
-- [ ] T029 [US2] Build the `MainScreen` component composing `StreakCounter` + `Heatmap` + today's check-in entry point in `src/components/MainScreen.tsx` (depends on T027, T028)
-- [ ] T030 [US2] Replace the App shell's minimal entry screen with `MainScreen` as the default view in `src/App.tsx` (depends on T029, T022)
+- [X] T025 [P] [US2] Implement the streak computation function per data-model.md's Streak computation rule in `src/lib/streak.ts` (depends on T009)
+- [X] T026 [P] [US2] Implement the 30-day heatmap projection function in `src/lib/heatmap.ts` (depends on T009, T007)
+- [X] T027 [P] [US2] Build the `StreakCounter` component (large numeral, the dominant visual element per spec Assumptions) in `src/components/StreakCounter.tsx` (depends on T025)
+- [X] T028 [P] [US2] Build the `Heatmap` component with three visually distinct day states in `src/components/Heatmap.tsx` (depends on T026)
+- [X] T029 [US2] Build the `MainScreen` component composing `StreakCounter` + `Heatmap` + today's check-in entry point in `src/components/MainScreen.tsx` (depends on T027, T028)
+- [X] T030 [US2] Replace the App shell's minimal entry screen with `MainScreen` as the default view in `src/App.tsx` (depends on T029, T022)
 
 **Checkpoint**: User Stories 1 AND 2 both work independently — the app now shows streak + history alongside the check-in loop.
 
@@ -126,15 +127,15 @@ dailyman/
 
 ### Tests for User Story 3
 
-- [ ] T031 [P] [US3] Unit test for missed-check-in detection (yesterday has a commitment but `completionStatus` is still `"pending"`) in `tests/unit/missedCheckin.test.ts`
-- [ ] T032 [P] [US3] Component test for the `AcknowledgmentStep` flow (prompt shown → response saved → proceeds to today's morning flow) in `tests/components/AcknowledgmentStep.test.tsx`
+- [X] T031 [P] [US3] Unit test for missed-check-in detection (yesterday has a commitment but `completionStatus` is still `"pending"`) in `tests/unit/missedCheckin.test.ts`
+- [X] T032 [P] [US3] Component test for the `AcknowledgmentStep` flow (prompt shown → response saved → proceeds to today's morning flow) in `tests/components/AcknowledgmentStep.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] Implement the missed-check-in detection function per FR-010 and data-model.md's `acknowledgedMissedPrior` field in `src/lib/missedCheckin.ts` (depends on T009, T007)
-- [ ] T034 [US3] Implement the missed-check-in acknowledgment generation function (Call 2) per contracts/ai-generation.md in `src/ai/generateAcknowledgment.ts` (depends on T011)
-- [ ] T035 [US3] Build the `AcknowledgmentStep` component in `src/components/AcknowledgmentStep.tsx` (depends on T034)
-- [ ] T036 [US3] Wire `AcknowledgmentStep` into the App shell's startup sequence, shown before `MorningCheckin` whenever a missed check-in is detected in `src/App.tsx` (depends on T033, T035, T030)
+- [X] T033 [US3] Implement the missed-check-in detection function per FR-010 and data-model.md's `acknowledgedMissedPrior` field in `src/lib/missedCheckin.ts` (depends on T009, T007)
+- [X] T034 [US3] Implement the missed-check-in acknowledgment generation function (Call 2) per contracts/ai-generation.md in `src/ai/generateAcknowledgment.ts` (depends on T011)
+- [X] T035 [US3] Build the `AcknowledgmentStep` component in `src/components/AcknowledgmentStep.tsx` (depends on T034)
+- [X] T036 [US3] Wire `AcknowledgmentStep` into the App shell's startup sequence, shown before `MorningCheckin` whenever a missed check-in is detected in `src/App.tsx` (depends on T033, T035, T030) — extended `useCheckinFlow` (not a separate hook) with yesterday-entry loading, auto-generation effect for Call 2, and `submitAcknowledgment`/`retryAcknowledgment`
 
 **Checkpoint**: All three user stories are independently functional — the full spec (FR-001–FR-014) is implemented.
 
@@ -144,11 +145,11 @@ dailyman/
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T037 [P] Apply consistent dark-theme spacing/typography across `MainScreen`, `MorningCheckin`, `NightCheckin`, and `AcknowledgmentStep` per constitution UX Consistency in `src/components/*.tsx`
-- [ ] T038 [P] Add a loading state for the initial IndexedDB read on app start in `src/App.tsx`
-- [ ] T039 Build a first-run API key prompt per contracts/ai-generation.md "API key" behavior in `src/components/ApiKeyPrompt.tsx` (depends on T011)
-- [ ] T040 [P] Verify the production build is a static-assets-only bundle of reasonable size (constitution Performance Requirements) by running `npm run build`
-- [ ] T041 Run quickstart.md Scenarios 1–3 and the Edge Case spot checks manually in a browser (constitution Testing Standards floor)
+- [X] T037 [P] Apply consistent dark-theme spacing/typography across `MainScreen`, `MorningCheckin`, `NightCheckin`, and `AcknowledgmentStep` per constitution UX Consistency in `src/components/*.tsx` — verified already consistent (shared `max-w-md`/`gap-4`/textarea/button classes) from how the components were built in earlier phases
+- [X] T038 [P] Add a loading state for the initial IndexedDB read on app start in `src/App.tsx`
+- [X] T039 Build a first-run API key prompt per contracts/ai-generation.md "API key" behavior in `src/components/ApiKeyPrompt.tsx` (depends on T011)
+- [X] T040 [P] Verify the production build is a static-assets-only bundle of reasonable size (constitution Performance Requirements) by running `npm run build` — 209KB JS / 64.6KB gzip + 7.9KB CSS, static assets only
+- [X] T041 Run quickstart.md Scenarios 1–3 and the Edge Case spot checks manually in a browser (constitution Testing Standards floor) — see Notes below for what was verified and a real bug found and fixed in the process
 
 ---
 
@@ -227,3 +228,11 @@ Task: "Build NightCheckin component in src/components/NightCheckin.tsx"
 - `src/App.tsx` is intentionally the one file touched sequentially across Foundational (T012) and each story's wiring task (T022, T030, T036) — do not parallelize those four tasks
 - Commit after each task or logical group
 - Stop at any checkpoint to validate a story independently before moving on
+
+## T041 Manual Validation Notes (2026-07-20)
+
+Verified live in Chrome against the dev server, using real IndexedDB writes to seed multi-day data (no live Anthropic API key was available, so AI-dependent scenarios were exercised via the error/retry path instead of a successful generation):
+
+- **Verified working**: first-ever-day empty state (streak 0, all-`no-entry` heatmap); morning check-in entry flow; API-key-missing gate (contracts/ai-generation.md) appearing before any network call; streak computation with real seeded data (3-day streak, then correctly hard-resets to 0 on an incomplete day per FR-013); heatmap three-state rendering; FR-014 night-check-in gating (`NightCheckin` correctly renders instead of `MorningCheckin` once a commitment exists); full night check-in flow (Yes → "What did you learn?" → streak updates to 1); duplicate-check-in guard (no re-entry button once a day is terminal); FR-010 acknowledgment step appearing before the main screen when a missed check-in is seeded.
+- **Bug found and fixed during this pass**: the FR-010 acknowledgment auto-generation effect in `src/state/useCheckinFlow.ts` included `ackGenerating` (a value it sets itself) in its own `useEffect` dependency array. This caused the effect to clean itself up — discarding the in-flight result via its `cancelled` flag — moments after starting, before the real async response could ever land, permanently freezing the UI on "Thinking…" (confirmed live: stuck >16s past the 15s timeout, zero network trace ever committed to state). This would have affected production, not just React StrictMode's dev double-invoke. Fixed by replacing the state-based in-flight guard with a `ref` (`ackInFlightRef`) that isn't a dependency, and removing `ackGenerating` from the dependency array. A related bug in `retryAcknowledgment` (clearing `acknowledgmentPrompt`/`ackError` didn't actually change any effect dependency, so Retry silently did nothing) was fixed by adding an explicit `ackAttempt` counter that the effect depends on and `retryAcknowledgment` increments. Both fixes were re-verified live: the acknowledgment step now resolves to an error state within ~3s and Retry correctly re-fires.
+- **Not verified (no real API key available)**: an actual successful live-generated follow-up question or acknowledgment prompt's *content* — only the request/error/retry mechanics around those calls were exercised. Recommend the user run Scenario 1 step 3 and Scenario 3 step 2 manually with a real Anthropic API key before considering AI-generation quality validated.
