@@ -17,6 +17,7 @@ function entry(date: string, overrides: Partial<DailyEntry> = {}): DailyEntry {
 
 beforeEach(() => {
   // Fresh database per test, simulating a real app restart/reload.
+  // eslint-disable-next-line no-global-assign -- swapping the fake-indexeddb instance is intentional
   indexedDB = new IDBFactory();
   _resetDBConnectionForTests();
 });

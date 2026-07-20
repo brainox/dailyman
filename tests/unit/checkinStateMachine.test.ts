@@ -43,11 +43,31 @@ describe("deriveCheckinPhase (data-model.md state diagram)", () => {
       ),
     ).toBe("incomplete");
   });
+
+  it("entry exists with only FR-010 acknowledgment fields set -> still no-entry", () => {
+    // Found via live testing: submitAcknowledgment writes a DailyEntry before the
+    // morning flow starts. From the morning check-in's perspective nothing has
+    // been started yet, so this must not be misread as "morning-in-progress" —
+    // doing so silently blocked Continue via canStartMorningCheckin below.
+    expect(
+      deriveCheckinPhase(
+        entry({ acknowledgedMissedPrior: true, acknowledgmentResponse: "I forgot to check in" }),
+      ),
+    ).toBe("no-entry");
+  });
 });
 
 describe("canStartMorningCheckin (Edge Cases: duplicate check-in guard)", () => {
   it("allows starting when there is no entry for today", () => {
     expect(canStartMorningCheckin(undefined)).toBe(true);
+  });
+
+  it("allows starting after an acknowledgment-only entry exists (FR-010 handoff)", () => {
+    expect(
+      canStartMorningCheckin(
+        entry({ acknowledgedMissedPrior: true, acknowledgmentResponse: "I forgot to check in" }),
+      ),
+    ).toBe(true);
   });
 
   it("blocks a second morning check-in once one is already in progress", () => {

@@ -171,7 +171,12 @@ export function useCheckinFlow(): UseCheckinFlowResult {
       try {
         const recentContext = await getRecentContext(today);
         const followupQuestion = await generateMorningFollowup(avoidance, recentContext);
+        // Merge onto any existing entry rather than replacing it outright —
+        // today may already carry FR-010 acknowledgment fields (set by
+        // submitAcknowledgment before the morning flow starts) that must
+        // survive this write, since upsert replaces the whole record.
         const newEntry: DailyEntry = {
+          ...(entry ?? { date: today, completionStatus: "pending" }),
           date: today,
           avoidance,
           morningFollowup: followupQuestion,

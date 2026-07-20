@@ -19,7 +19,14 @@ export function deriveCheckinPhase(entry: DailyEntry | undefined): CheckinPhase 
   if (entry.completionStatus === "complete") return "complete";
   if (entry.completionStatus === "incomplete") return "incomplete";
   if (entry.commitment) return "commitment-set";
-  return "morning-in-progress";
+  if (entry.avoidance) return "morning-in-progress";
+  // A DailyEntry can exist for today with only FR-010 acknowledgment fields
+  // set (submitAcknowledgment writes acknowledgedMissedPrior/acknowledgmentResponse
+  // before the morning flow itself has started). From the morning check-in's
+  // perspective nothing has been started yet, so this must still read as
+  // "no-entry" — otherwise canStartMorningCheckin() below incorrectly blocks
+  // the very next step (found via live testing: Continue silently did nothing).
+  return "no-entry";
 }
 
 /** FR-014: the night check-in is unavailable until today's commitment exists. */
